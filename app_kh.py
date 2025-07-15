@@ -52,7 +52,7 @@ if st.sidebar.button("🔎 Tampilkan Visualisasi"):
         var = ds["pratesfc"][forecast_hour, :, :] * 3600
         label = "Curah Hujan (mm/jam)"
         cmap = "Blues"
-        vmin, vmax = 0, 10
+        vmin, vmax = 0, 50
     elif "tmp2m" in parameter:
         var = ds["tmp2m"][forecast_hour, :, :] - 273.15
         label = "Suhu (°C)"
@@ -117,17 +117,23 @@ if st.sidebar.button("🔎 Tampilkan Visualisasi"):
     ax.add_feature(cfeature.BORDERS, linestyle=':')
     ax.add_feature(cfeature.LAND, facecolor='lightgray')
 
-    # Titik Palangkaraya (ibu kota Kalimantan Tengah)
-    lon_palangka, lat_palangka = 113.9213, -2.2081
-    ax.plot(lon_palangka, lat_palangka, marker='o', color='red', markersize=6, transform=ccrs.PlateCarree())
-    ax.text(lon_palangka + 0.2, lat_palangka + 0.1, "Palangkaraya", fontsize=9, fontweight='bold', color='black',
-            transform=ccrs.PlateCarree(), bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.2'))
+    # Titik Kota di Kalimantan Tengah
+    # Lokasi-lokasi utama di Kalimantan Tengah
+    locations = {
+        "Pangkalan Bun": (111.632413,  -2.684973), 
+        "Sampit": (112.960945, -2.537952),
+        "Palangkaraya": (113.9213, -2.2081),
+        "Muara Teweh": (114.893400,  -0.940741),
+        "Kapuas ": (114.391838,  -3.016037),
+        "Buntok": (114.897396,  -1.669177),
+        "Puruk Cahu": (114.572811, -0.616670)
+    }
 
-    # Titik Observasi Tambahan (Contoh titik lainnya)
-    lon_obs, lat_obs = 114.907933, -1.682540
-    ax.plot(lon_obs, lat_obs, marker='^', color='blue', markersize=6, transform=ccrs.PlateCarree())
-    ax.text(lon_obs + 0.2, lat_obs - 0.2, "Obs Point", fontsize=9, fontweight='bold', color='blue',
-            transform=ccrs.PlateCarree(), bbox=dict(facecolor='white', edgecolor='blue', boxstyle='round,pad=0.2'))
+    # Menambahkan titik lokasi di peta
+    for city, (lon, lat) in locations.items():
+        ax.plot(lon, lat, marker='o', color='red', markersize=6, transform=ccrs.PlateCarree())
+        ax.text(lon + 0.2, lat + 0.1, city, fontsize=9, fontweight='bold', color='black',
+                transform=ccrs.PlateCarree(), bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.2'))
 
     st.pyplot(fig)
 
